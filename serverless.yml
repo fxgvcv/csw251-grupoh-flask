@@ -1,0 +1,30 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: fxgvcv
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: sarc
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: sarc
+
+custom:
+  wsgi:
+    app: src.app.app
+
+provider:
+  name: aws
+  role: arn:aws:iam::023177117893:role/LabRole
+  runtime: python3.12
+
+functions:
+  api:
+    handler: wsgi_handler.handler
+    events:
+      - http:
+          path: /
+          method: ANY
+      - http:
+          path: /{proxy+}
+          method: ANY
+
+plugins:
+  - serverless-wsgi
+  - serverless-python-requirements

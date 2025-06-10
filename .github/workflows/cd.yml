@@ -13,6 +13,7 @@ jobs:
       DB_NAME: ${{ vars.DB_NAME }}
       AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+      AWS_SESSION_TOKEN: ${{ vars.AWS_SESSION_TOKEN }}
       AWS_ROLE_ARN: ${{ vars.AWS_ROLE_ARN }}
       SECURITY_GROUP_ID_1: ${{ vars.SECURITY_GROUP_ID_1 }}
       SUBNET_ID_1: ${{ vars.SUBNET_ID_1 }}

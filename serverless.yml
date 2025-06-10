@@ -12,7 +12,21 @@ custom:
 provider:
   name: aws
   role: arn:aws:iam::023177117893:role/LabRole
-  runtime: python3.12
+  runtime: python3.11
+  vpc:
+    securityGroupIds:
+      - sg-01ed9a6fa4d11c1e6
+    subnetIds:
+      - subnet-0bc672736497a8adf
+      - subnet-0d5b94cb55e4fb494
+
+package:
+  exclude:
+    - tests/**
+    - '**/__pycache__/**'
+    - node_modules/**
+    - instance/**
+    - terraform/**
 
 functions:
   api:

@@ -10,7 +10,7 @@ from src.models.room_model import Room
 from src.utils.shared.db.base import Base, db
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///./local.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://postgres:postgres@sarc-db-instance.cuqc68zbmxj1.us-east-1.rds.amazonaws.com:5432/sarcdb"
 db.init_app(app)
 
 with app.app_context():

@@ -18,6 +18,7 @@ jobs:
       SECURITY_GROUP_ID_1: ${{ vars.SECURITY_GROUP_ID_1 }}
       SUBNET_ID_1: ${{ vars.SUBNET_ID_1 }}
       SUBNET_ID_2: ${{ vars.SUBNET_ID_2 }}
+      SLS_ACCESS_KEY: ${{ vars.SERVERLESS_ACCESS_KEY }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

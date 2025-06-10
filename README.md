@@ -2,6 +2,10 @@
 
 Este é o projeto **SARC**.
 
+## Professor, teste aqui!
+
+URL: https://rh3rhyjrq2.execute-api.us-east-1.amazonaws.com/dev/
+
 ## Como rodar localmente
 
 1. Crie um ambiente virtual Python (versão 3.11):

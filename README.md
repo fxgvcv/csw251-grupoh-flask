@@ -30,6 +30,40 @@ Este é o projeto **SARC**.
 - Utilizamos **Terraform** para criar a base da infraestrutura.
 - Utilizamos **Serverless Framework** para provisionar recursos ligados à aplicação, como API Gateway e AWS Lambda.
 
+### Deploy manual
+
+Para fazer o deploy manualmente faça da seguinte maneira:
+
+### Pré-requisitos
+
+Antes de realizar o deploy:
+- Crie um arquivo `.env/aws` com as credenciais de acesso à AWS.
+- Certifique-se de estar autenticado no Serverless Framework (`serverless login`).
+
+1. Inicialize o Terraform:
+
+  ```bash
+  cd terraform
+  terraform init
+  ```
+
+2. Aplique as configurações do Terraform:
+
+  ```bash
+  terraform apply
+  ```
+
+3. Colete as informações de SecurityGroupId e SubnetId gerados pela terraform e injente no arquivo serverless.yml.
+
+4. Faça o deploy da aplicação com o Serverless Framework:
+
+  ```bash
+  cd ..
+  serverless deploy
+  ```
+
+5. Crie a variável de ambiente DB_URL na Lambda Function do RDS gerado pelo Terraform.
+
 ## Estrutura
 
 ```

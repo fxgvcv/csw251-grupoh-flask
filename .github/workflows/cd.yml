@@ -47,5 +47,8 @@ jobs:
       - name: Install Serverless
         run: npm install -g serverless
 
+      - name: Serverless Login
+        run: serverless login --ci
+
       - name: Serverless Deploy
         run: serverless deploy

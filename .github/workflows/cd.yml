@@ -19,6 +19,7 @@ jobs:
       SUBNET_ID_1: ${{ vars.SUBNET_ID_1 }}
       SUBNET_ID_2: ${{ vars.SUBNET_ID_2 }}
       SERVERLESS_ACCESS_KEY: ${{ vars.SERVERLESS_ACCESS_KEY }}
+      DB_URL: ${{ vars.DB_URL }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4

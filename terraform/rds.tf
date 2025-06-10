@@ -91,6 +91,9 @@ resource "aws_db_subnet_group" "database_subnet_group" {
   }
 }
 
+variable "db_username" {}
+variable "db_password" { sensitive = true }
+variable "db_name" { default = "sarcdb" }
 
 # create the rds instance
 resource "aws_db_instance" "db_instance" {
@@ -98,13 +101,13 @@ resource "aws_db_instance" "db_instance" {
   engine_version          = "16.4"
   multi_az                = false
   identifier              = "sarc-db-instance"
-  username                = "postgres"
-  password                = "postgres"
+  username                = var.db_username
+  password                = var.db_password
   instance_class          = "db.t3.micro"
   allocated_storage       = 200
   db_subnet_group_name    = aws_db_subnet_group.database_subnet_group.name
   vpc_security_group_ids  = [aws_security_group.database_security_group.id]
   availability_zone       = data.aws_availability_zones.available_zones.names[0]
-  db_name                 = "sarcdb"
+  db_name                 = var.db_name
   skip_final_snapshot     = true
 }

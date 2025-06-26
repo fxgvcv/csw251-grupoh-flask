@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_cors import CORS # Add this import
 from src.repositories.building_repository import BuildingRepository
 from src.repositories.room_repository import RoomRepository
 from src.services.building_service import BuildingService
@@ -10,6 +11,7 @@ from src.models.room_model import Room
 from src.utils.shared.db.base import Base, db
 
 app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": "*"}}) # Initialize CORS
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql+psycopg2://postgres:postgres@sarc-db-instance.cuqc68zbmxj1.us-east-1.rds.amazonaws.com:5432/sarcdb"
 db.init_app(app)
 

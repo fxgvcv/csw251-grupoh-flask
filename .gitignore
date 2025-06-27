@@ -3,6 +3,7 @@ __pycache__/
 instance/
 .serverless/
 node_modules/
+.env
 
 # Terraform
 .terraform/

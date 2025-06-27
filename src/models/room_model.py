@@ -6,8 +6,8 @@ class Room(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
-    building_id = Column(Integer, nullable=False)
-    capacity = Column(Integer, ForeignKey('buildings.id'), nullable=False)
+    building_id = Column(Integer, ForeignKey('buildings.id'), nullable=False)
+    capacity = Column(Integer, nullable=False)
 
     def to_dict(self):
         return {

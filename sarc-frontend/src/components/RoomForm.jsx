@@ -85,55 +85,70 @@ function RoomForm() {
   }
 
   return (
-    <div>
-      <h2>{id ? 'Edit Room' : 'Create New Room'}</h2>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+    <article>
+      <header>
+        <h2>{id ? 'Edit Room' : 'Create New Room'}</h2>
+      </header>
+      {error && <p role="alert">{error}</p>}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Name:</label>
+        <label htmlFor="name">
+          Name:
           <input
             type="text"
             id="name"
+            name="name"
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            aria-busy={isLoading && id && !name} // Busy if loading existing data and name isn't populated yet
           />
-        </div>
-        <div>
-          <label htmlFor="building">Building:</label>
+        </label>
+
+        <label htmlFor="building">
+          Building:
           <select
             id="building"
+            name="building"
             value={buildingId}
             onChange={(e) => setBuildingId(e.target.value)}
             required
+            aria-busy={isLoading && buildings.length === 0} // Busy if buildings are still loading
           >
-            <option value="" disabled>Select a building</option>
+            <option value="" disabled={buildings.length > 0}>
+              {buildings.length === 0 && isLoading ? "Loading buildings..." : "Select a building"}
+            </option>
             {buildings.map(building => (
               <option key={building.id} value={building.id}>
                 {building.name}
               </option>
             ))}
           </select>
-        </div>
-        <div>
-          <label htmlFor="capacity">Capacity:</label>
+        </label>
+
+        <label htmlFor="capacity">
+          Capacity:
           <input
             type="number"
             id="capacity"
+            name="capacity"
             value={capacity}
             onChange={(e) => setCapacity(e.target.value)}
             required
             min="0"
+            aria-busy={isLoading && id && !capacity} // Busy if loading existing data and capacity isn't populated
           />
+        </label>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
+          <button type="submit" aria-busy={isLoading} disabled={isLoading}>
+            Save Room
+          </button>
+          <button type="button" className="secondary" onClick={() => navigate('/rooms')} disabled={isLoading}>
+            Cancel
+          </button>
         </div>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Saving...' : 'Save Room'}
-        </button>
-        <button type="button" onClick={() => navigate('/rooms')} disabled={isLoading}>
-          Cancel
-        </button>
       </form>
-    </div>
+    </article>
   );
 }
 

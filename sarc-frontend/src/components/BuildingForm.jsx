@@ -51,28 +51,35 @@ function BuildingForm() {
   }
 
   return (
-    <div>
-      <h2>{id ? 'Edit Building' : 'Create New Building'}</h2>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
+    <article>
+      <header>
+        <h2>{id ? 'Edit Building' : 'Create New Building'}</h2>
+      </header>
+      {error && <p role="alert">{error}</p>} {/* Using Pico's default alert styling */}
       <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="name">Name:</label>
+        <label htmlFor="name">
+          Name:
           <input
             type="text"
             id="name"
+            name="name" // Good practice for forms
             value={name}
             onChange={(e) => setName(e.target.value)}
             required
+            aria-busy={isLoading && id} // Show busy state when loading existing data
           />
+        </label>
+
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+          <button type="submit" aria-busy={isLoading} disabled={isLoading}>
+            Save Building
+          </button>
+          <button type="button" className="secondary" onClick={() => navigate('/buildings')} disabled={isLoading}>
+            Cancel
+          </button>
         </div>
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? 'Saving...' : 'Save Building'}
-        </button>
-        <button type="button" onClick={() => navigate('/buildings')} disabled={isLoading}>
-          Cancel
-        </button>
       </form>
-    </div>
+    </article>
   );
 }
 

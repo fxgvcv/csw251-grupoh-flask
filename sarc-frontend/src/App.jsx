@@ -9,24 +9,24 @@ import './App.css'; // Basic styling
 function App() {
   return (
     <Router>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/buildings">Buildings</Link>
-            </li>
-            <li>
-              <Link to="/rooms">Rooms</Link>
-            </li>
-          </ul>
-        </nav>
+      <nav className="container-fluid">
+        <ul>
+          <li><strong>SARC</strong></li>
+        </ul>
+        <ul>
+          <li>
+            <Link to="/buildings">Buildings</Link>
+          </li>
+          <li>
+            <Link to="/rooms">Rooms</Link>
+          </li>
+        </ul>
+      </nav>
 
-        <hr />
-
-        <div className="content">
-          <Routes>
-            {/* Default route */}
-            <Route path="/" element={<Navigate replace to="/buildings" />} />
+      <main className="container">
+        <Routes>
+          {/* Default route */}
+          <Route path="/" element={<Navigate replace to="/buildings" />} />
 
             {/* Building Routes */}
             <Route path="/buildings" element={<BuildingList />} />

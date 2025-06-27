@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { getAllRooms, deleteRoom as apiDeleteRoom, getAllBuildings } from '../services/api';
+import ConfirmModal from './ConfirmModal'; // Import the modal
 
 function RoomList() {
   const [rooms, setRooms] = useState([]);
@@ -8,6 +9,10 @@ function RoomList() {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
+
+  // State for modal
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [deleteCandidateId, setDeleteCandidateId] = useState(null);
 
   useEffect(() => {
     fetchRoomsAndBuildings();
@@ -38,39 +43,103 @@ function RoomList() {
     }
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this room?')) {
+  const openDeleteModal = (id) => {
+    setDeleteCandidateId(id);
+    setIsModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setDeleteCandidateId(null);
+    setIsModalOpen(false);
+  };
+
+  const confirmDelete = async () => {
+    if (deleteCandidateId) {
+      setIsLoading(true); // Optional: indicate loading during delete
       try {
-        await apiDeleteRoom(id);
-        // Refetch rooms, buildings might not have changed but it's simpler to refetch both
-        fetchRoomsAndBuildings();
+        await apiDeleteRoom(deleteCandidateId);
+        fetchRoomsAndBuildings(); // Refresh the list
       } catch (err) {
         setError(err.message || 'Failed to delete room');
         console.error(err);
+      } finally {
+        closeDeleteModal();
+        // setIsLoading(false); // fetchRoomsAndBuildings will handle this
       }
     }
   };
 
-  if (isLoading) {
-    return <p>Loading rooms...</p>;
-  }
-
   return (
-    <div>
-      <h2>Rooms</h2>
-      <Link to="/rooms/new">Create New Room</Link>
-      {error && <p style={{ color: 'red' }}>Error: {error}</p>}
-      {rooms.length === 0 && !error && <p>No rooms found.</p>}
-      <ul>
-        {rooms.map((room) => (
-          <li key={room.id}>
-            {room.name} (Building: {buildings[room.building_id] || 'N/A'}, Capacity: {room.capacity})
-            <button onClick={() => navigate(`/rooms/edit/${room.id}`)} style={{ marginLeft: '10px' }}>Edit</button>
-            <button onClick={() => handleDelete(room.id)} style={{ marginLeft: '5px', color: 'red' }}>Delete</button>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <article>
+      <header>
+        <h2>Rooms</h2>
+        <Link to="/rooms/new" role="button">Create New Room</Link>
+      </header>
+      {error && <p role="alert">{error}</p>}
+
+      {isLoading && !isModalOpen && <p aria-busy="true">Loading rooms...</p>}
+
+      {rooms.length === 0 && !error && !isLoading && <p>No rooms found.</p>}
+
+      {(!isLoading || rooms.length > 0) && !isModalOpen ? ( // Render table if not loading OR if there's data, and modal isn't hiding it
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Building</th>
+              <th>Capacity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rooms.map((room) => (
+              <tr key={room.id}>
+                <td>{room.name}</td>
+                <td>{buildings[room.building_id] || 'N/A'}</td>
+                <td>{room.capacity}</td>
+                <td>
+                  <button className="outline" onClick={() => navigate(`/rooms/edit/${room.id}`)} style={{ marginRight: '5px' }}>Edit</button>
+                  <button className="secondary" onClick={() => openDeleteModal(room.id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      ) : null}
+       {!isLoading && rooms.length > 0 && isModalOpen && ( // Keep table visible if modal is open over populated list
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Building</th>
+              <th>Capacity</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {rooms.map((room) => (
+              <tr key={room.id}>
+                <td>{room.name}</td>
+                <td>{buildings[room.building_id] || 'N/A'}</td>
+                <td>{room.capacity}</td>
+                <td>
+                  {/* Buttons could be disabled here if preferred while modal is open */}
+                  <button className="outline" onClick={() => navigate(`/rooms/edit/${room.id}`)} style={{ marginRight: '5px' }}>Edit</button>
+                  <button className="secondary" onClick={() => openDeleteModal(room.id)}>Delete</button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+      <ConfirmModal
+        isOpen={isModalOpen}
+        title="Delete Room"
+        message={`Are you sure you want to delete room ID ${deleteCandidateId}? This action cannot be undone.`}
+        onConfirm={confirmDelete}
+        onCancel={closeDeleteModal}
+      />
+    </article>
   );
 }
 

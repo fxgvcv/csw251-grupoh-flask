@@ -98,7 +98,6 @@ variable "db_name" { default = "sarcdb" }
 # create the rds instance
 resource "aws_db_instance" "db_instance" {
   engine                  = "postgres"
-  engine_version          = "16.4"
   multi_az                = false
   identifier              = "sarc-db-instance"
   username                = var.db_username

@@ -12,7 +12,7 @@ class RoomService(InterfaceRoomService):
         return self.room_repository.get_all_rooms()
 
     def create_room(self, room_data: dict):
-        return self.room_repository.create_room_(room_data)
+        return self.room_repository.create_room(room_data)
 
     def update_room(self, room_id: str, room_data: dict):
         return self.room_repository.update_room(room_id, room_data)

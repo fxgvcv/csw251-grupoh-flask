@@ -1,6 +1,7 @@
 import os
 from src.utils.config.config import DevConfig, ProdConfig
 from flask import Flask
+from flask_cors import CORS
 from src.repositories.building_repository import BuildingRepository
 from src.repositories.room_repository import RoomRepository
 from src.services.building_service import BuildingService
@@ -12,6 +13,15 @@ from src.models.room_model import Room
 from src.utils.shared.db.base import Base, db
 
 app = Flask(__name__)
+
+# Enable CORS for all routes
+CORS(app, resources={
+    r"/*": {
+        "origins": "*",
+        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"]
+    }
+})
 
 if os.getenv("FLASK_ENV") == "development":
     app.config.from_object(DevConfig)

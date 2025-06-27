@@ -1,12 +1,40 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import BuildingList from './components/BuildingList';
 import BuildingForm from './components/BuildingForm';
 import RoomList from './components/RoomList';
 import RoomForm from './components/RoomForm';
-import './App.css'; // Basic styling
+import Login from './components/Login'; 
+import './App.css'; 
+
+import client from './services/api'; 
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      setIsAuthenticated(true);
+      client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  }, []);
+
+  const handleLoginSuccess = () => {
+    setIsAuthenticated(true);
+    const token = localStorage.getItem('userToken');
+    if (token) {
+      client.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('username');
+    delete client.defaults.headers.common['Authorization'];
+    setIsAuthenticated(false); 
+  };
+
   return (
     <Router>
       <nav className="container-fluid">
@@ -14,35 +42,65 @@ function App() {
           <li><strong>SARC</strong></li>
         </ul>
         <ul>
-          <li>
-            <Link to="/buildings">Buildings</Link>
-          </li>
-          <li>
-            <Link to="/rooms">Rooms</Link>
-          </li>
+          {isAuthenticated ? (
+            <>
+              <li>
+                <Link to="/buildings">Buildings</Link>
+              </li>
+              <li>
+                <Link to="/rooms">Rooms</Link>
+              </li>
+              <li>
+                <a href="#" onClick={handleLogout} role="button" className="secondary outline">Logout</a>
+              </li>
+            </>
+          ) : (
+            <li>
+              <Link to="/login" role="button">Login</Link>
+            </li>
+          )}
         </ul>
       </nav>
 
       <main className="container">
         <Routes>
-          {/* Default route */}
-          <Route path="/" element={<Navigate replace to="/buildings" />} />
+          {/* Rota de Login */}
+          <Route path="/login" element={isAuthenticated ? <Navigate replace to="/buildings" /> : <Login onLoginSuccess={handleLoginSuccess} />} />
 
-            {/* Building Routes */}
-            <Route path="/buildings" element={<BuildingList />} />
-            <Route path="/buildings/new" element={<BuildingForm />} />
-            <Route path="/buildings/edit/:id" element={<BuildingForm />} />
+          {/* Rotas protegidas  */}
+          <Route
+            path="/buildings"
+            element={isAuthenticated ? <BuildingList /> : <Navigate replace to="/login" />}
+          />
+          <Route
+            path="/buildings/new"
+            element={isAuthenticated ? <BuildingForm /> : <Navigate replace to="/login" />}
+          />
+          <Route
+            path="/buildings/edit/:id"
+            element={isAuthenticated ? <BuildingForm /> : <Navigate replace to="/login" />}
+          />
 
-            {/* Room Routes */}
-            <Route path="/rooms" element={<RoomList />} />
-            <Route path="/rooms/new" element={<RoomForm />} />
-            <Route path="/rooms/edit/:id" element={<RoomForm />} />
+          <Route
+            path="/rooms"
+            element={isAuthenticated ? <RoomList /> : <Navigate replace to="/login" />}
+          />
+          <Route
+            path="/rooms/new"
+            element={isAuthenticated ? <RoomForm /> : <Navigate replace to="/login" />}
+          />
+          <Route
+            path="/rooms/edit/:id"
+            element={isAuthenticated ? <RoomForm /> : <Navigate replace to="/login" />}
+          />
 
-            {/* Fallback for unknown routes (optional) */}
-            <Route path="*" element={<Navigate replace to="/" />} />
-          </Routes>
-        </div>
-      </div>
+          {/* Rota padrão: redireciona para login se não autenticado, senão para buildings */}
+          <Route
+            path="*"
+            element={isAuthenticated ? <Navigate replace to="/buildings" /> : <Navigate replace to="/login" />}
+          />
+        </Routes>
+      </main>
     </Router>
   );
 }

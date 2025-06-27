@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'https://rh3rhyjrq2.execute-api.us-east-1.amazonaws.com/dev';
+const API_BASE_URL = ' https://r33grhtvqi.execute-api.us-east-1.amazonaws.com/dev/';
 
 const client = axios.create({
   baseURL: API_BASE_URL,
@@ -22,5 +22,9 @@ export const getRoomById = (id) => client.get(`/rooms/${id}`);
 export const createRoom = (data) => client.post('/rooms/', data);
 export const updateRoom = (id, data) => client.put(`/rooms/${id}`, data);
 export const deleteRoom = (id) => client.delete(`/rooms/${id}`);
+
+//Login endpoints
+export const registerUser = (userData) => client.post('/users', userData);
+export const authenticateUser = (credentials) => client.post('/users/authenticate', credentials);
 
 export default client;

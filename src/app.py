@@ -31,7 +31,7 @@ if os.getenv("FLASK_ENV") == "development":
     app.config.from_object(DevConfig)
 else:
     app.config.from_object(ProdConfig)
-    
+ 
 db.init_app(app)
 
 with app.app_context():

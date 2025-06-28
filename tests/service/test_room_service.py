@@ -33,10 +33,10 @@ def test_get_all_rooms(service, mock_repository):
 def test_create_room(service, mock_repository):
     room_data = {"name": "RoomA"}
     mock_room = MagicMock()
-    mock_repository.create_room_.return_value = mock_room
+    mock_repository.create_room.return_value = mock_room
     result = service.create_room(room_data)
     assert result == mock_room
-    mock_repository.create_room_.assert_called_once_with(room_data)
+    mock_repository.create_room.assert_called_once_with(room_data)
 
 def test_update_room_found(service, mock_repository):
     room_data = {"name": "Updated"}

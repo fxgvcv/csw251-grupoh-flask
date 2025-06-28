@@ -20,7 +20,7 @@ The SARC backend API must be running and accessible. By default, this frontend i
 
 2.  **Navigate to the frontend directory:**
     ```bash
-    cd sarc-frontend
+    cd app/web
     ```
 
 3.  **Install dependencies:**

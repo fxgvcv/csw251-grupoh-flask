@@ -21,7 +21,12 @@ URL: https://rh3rhyjrq2.execute-api.us-east-1.amazonaws.com/dev/
   pip install -r requirements.txt
   ```
 
-3. Exporte as variáveis de ambiente e inicie o servidor Flask:
+3. Esteja no diretório do servidor:
+```bash
+cd sarc/server
+```
+
+4. Exporte as variáveis de ambiente e inicie o servidor Flask:
 
   ```bash
   export FLASK_APP=src.app

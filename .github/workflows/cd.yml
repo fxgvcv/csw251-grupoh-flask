@@ -30,11 +30,11 @@ jobs:
           terraform_version: 1.7.5
 
       - name: Terraform Init
-        working-directory: terraform
+        working-directory: server/terraform
         run: terraform init
 
       - name: Terraform Apply
-        working-directory: terraform
+        working-directory: server/terraform
         run: |
           terraform apply -auto-approve \
             -var="db_username=$DB_USERNAME" \
@@ -55,10 +55,12 @@ jobs:
         run: npm install -g serverless
 
       - name: Install serverless-wsgi
+        working-directory: server
         run: npm install --save-dev serverless-wsgi
 
       - name: Serverless Login
         run: serverless login --ci
 
       - name: Serverless Deploy
+        working-directory: server
         run: serverless deploy
